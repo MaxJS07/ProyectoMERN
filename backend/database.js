@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { config } from "./src/config.js"
 
-mongoose.connect("mongodb://localhost:27017/PriceSmartDB")
+mongoose.connect(config.db.URI)
 
 //Comprobar que todo funciona
 const connection = mongoose.connection;

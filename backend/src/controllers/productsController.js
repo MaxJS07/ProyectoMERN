@@ -37,7 +37,7 @@ productController.updateProducts = async (req, res) =>{
         description,
         price,
         stock
-    }, {new: true})
+    }, {new: true})   
 
     res.json({message: "Product updated"})
 
