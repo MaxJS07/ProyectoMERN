@@ -30,7 +30,7 @@ adminController.insertAdmin = async (req, res) => {
             return res.status(400).json({message: "The name is too short, it has to be at least 3 letters long"})
         }
 
-        if(name.lenght < 6){
+        if(email.lenght < 6){
             return res.status(400).json({message: "The email is too short, it has to be at least 6 letters long"})
         }
 

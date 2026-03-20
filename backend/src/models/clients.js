@@ -1,0 +1,33 @@
+import {Schema, model} from "mongoose"
+
+const clientSchema = new Schema({
+    name:{
+        type: String
+    },
+    email:{
+        type: String
+    },
+    password:{
+        type: String
+    },
+    birthday:{
+        type: Date
+    },
+    status:{
+        type: Boolean
+    },
+    isVerified:{
+        type: Boolean
+    },
+    loginAttempts:{
+        type: Number
+    },
+    timeOut:{
+        type: Date
+    }
+}, {
+    timestamps: true,
+    strict: false
+})
+
+export default model("Clients", clientSchema)
