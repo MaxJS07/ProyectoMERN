@@ -22,7 +22,7 @@ reviewsController.insertReview = async (req, res) => {
     
     await newReview.save();
 
-    res.json({message: "Review Saved", data: newReview.populate("idEmployee", "name lastName").populate("idProducts", "name description")})
+    res.json({message: "Review Saved", data: newReview})
 
 }
 
@@ -53,3 +53,5 @@ reviewsController.updateReview = async (req, res) => {
 
     res.json({message: "Review updated"})
 }
+
+export default reviewsController;
