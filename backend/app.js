@@ -7,8 +7,14 @@ import brandsRoute from "./src/routes/brands.js"
 import adminsRoute from "./src/routes/admins.js"
 import clientsRoute from "./src/routes/clients.js"
 import customersRoute from "./src/routes/customers.js"
+import registerCustomerRoute from "./src/routes/registerCustomer.js"
+import registerEmployeeRoute from "./src/routes/registerEmployee.js"
+
+import cookieParser from "cookie-parser"
 
 const app = express();
+
+app.use(cookieParser());
 
 //PARA ACEPTAR JSON DESDE POSTMAN:
 app.use(express.json())
@@ -29,6 +35,8 @@ app.use("/api/clients", clientsRoute )
 
 app.use("/api/customers", customersRoute)
 
-app.use("/api/registerCustomers", )
+app.use("/api/registerCustomers", registerCustomerRoute)
+
+app.use("/api/registerEmployees", registerEmployeeRoute)
 
 export default app;

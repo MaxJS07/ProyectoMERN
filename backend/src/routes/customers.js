@@ -4,7 +4,7 @@ import customerController from "../controllers/customersController.js";
 const router = express.Router();
 
 router.route("/")
-.ger(customerController.getCustomers)
+.get(customerController.getCustomers)
 
 router.route("/api")
 .put(customerController.updateCustomer)

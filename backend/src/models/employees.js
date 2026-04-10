@@ -27,8 +27,14 @@ const employeeSchema = new Schema({
     phone:{
         type: String
     },
+    email: {
+        type: String
+    },
     password:{
         type: String
+    },
+    isVerified:{
+        type: Boolean
     },
     idBranches:{
         type: mongoose.Schema.Types.ObjectId,

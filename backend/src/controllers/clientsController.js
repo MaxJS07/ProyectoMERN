@@ -108,3 +108,5 @@ clientController.updateClient = async (req, res) => {
         return res.status(500).json({status: "Internal Server Error", message: error})
     }
 }
+
+export default clientController;

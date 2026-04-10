@@ -5,62 +5,61 @@ const employeeController = {};
 import employeeModel from "../models/employees.js"
 
 //SELECT
-employeeController.getEmployees = async (req, res) =>{
-    const employees = await employeeModel.find().populate("idBranches", "name address");
-    res.json(employees);
+employeeController.getEmployees = async (req, res) => {
+
+    try {
+        const employees = await employeeModel.find().populate("idBranches", "name address");
+        res.status(200).json(employees);
+    } catch (error) {
+        return res.status(500).json({ status: "Internal server error", message: error })
+    }
+
 };
 
-//INSERT
-employeeController.insertEmployees = async (req, res) =>{
-    //Solicitamos los datos
-    const {name, lastName, salary, DUI, phone, email, password, idBranches} = req.body;
-
-    //Llenamos el modelo con los datos solicitados
-    const newEmployee = new employeeModel({
-        name,
-        lastName,
-        salary,
-        DUI,
-        phone,
-        email,
-        password,
-        idBranches
-    })
-
-    //Guardamos el nuevo empleado
-    await newEmployee.save();
-    
-    res.json({message: "Employee saved", data: newEmployee})
-}
 
 //ELIMINAR
-employeeController.deleteEmployee = async (req, res) =>{
-    await employeeModel.findByIdAndDelete(req.params.id)
-    res.json({message: "Employee deleted"})
+employeeController.deleteEmployee = async (req, res) => {
+
+    try {
+        const deleteEmployee = await employeeModel.findByIdAndDelete(req.params.id)
+        if (!deleteEmployee) {
+            return res.status(404).json({ status: "Not Found", message: "The employee you wanted to delete was not found" });
+        }
+        return res.status(200).json({ status: "success", message: "The employee was deleted" })
+    } catch (error) {
+        return res.status(500).json({ status: "Internal Server Error", message: error })
+    }
 }
 
 //UPDATE
 employeeController.updateEmployee = async (req, res) => {
-    //Solicitamos los nuevos datos 
-    const {name, lastName, salary, DUI, phone, email, password, idBranches} = req.body;
 
-    //Actualizamos
-    await employeeModel.findByIdAndUpdate(
-        req.params.id,
-        {
-            name,
-            lastName,
-            salary,
-            DUI,
-            phone,
-            email,
-            password,
-            idBranches
-        },
-        { new: true}
-    );
+    try {
+        //Solicitamos los nuevos datos 
+        const { name, lastName, salary, DUI, phone, email, password, idBranches } = req.body;
 
-    res.json({message: "Employee updated"})
+        //Actualizamos
+        await employeeModel.findByIdAndUpdate(
+            req.params.id,
+            {
+                name,
+                lastName,
+                salary,
+                DUI,
+                phone,
+                email,
+                password,
+                isVerified,
+                idBranches
+            },
+            { new: true }
+        );
+
+        res.status(200).json({ message: "Employee updated" })
+    } catch (error) {
+        return res.status(500).json({status: "Internal Server Error", message: error})
+    }
+
 }
 
 export default employeeController;
