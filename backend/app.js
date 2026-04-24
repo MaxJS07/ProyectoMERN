@@ -12,10 +12,17 @@ import registerEmployeeRoute from "./src/routes/registerEmployee.js"
 import loginRoute from "./src/routes/loginCustomer.js"
 import logoutRouteCustomer from "./src/routes/logOut.js"
 import recoveryPassword from "./src/routes/recoveryPassword.js"
+import cors from "cors"
 
 import cookieParser from "cookie-parser"
 
 const app = express();
+
+app.use(cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    //Permitir el envío de cookies y credenciales
+    credentials: true
+}))
 
 app.use(cookieParser());
 
