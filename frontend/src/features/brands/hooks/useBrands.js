@@ -10,6 +10,7 @@ export const useBrands = () =>{
 
     const loadBrands = async () =>{
         try {
+            setError(null)
             setLoading(true);
             const data = await getBrands();
             setBrands(data)
@@ -21,8 +22,9 @@ export const useBrands = () =>{
         }
     };
 
-    const createBrand = async (data) =>{
+    const addBrand = async (data) =>{
         try {
+            setError(null)
             await createBrand(data);
             loadBrands();
         } catch (error) {
@@ -33,6 +35,7 @@ export const useBrands = () =>{
 
     const editBrand = async (id,data) =>{
         try{
+            setError(null)
             await updateBrand(id, data);
             loadBrands();
         }
@@ -42,8 +45,13 @@ export const useBrands = () =>{
     };
 
     const removeBrand = async (id) => {
-        await deleteBrand(id);
-        loadBrands();
+        try {
+            setError(null)
+            await deleteBrand(id);
+            loadBrands();
+        } catch (error) {
+            setError(error.message)
+        }
     }
 
     //Este useEffect ejecuta el loadbrands automáticamente al cargar la página, el "[]" quiere decir "solo una vez al cargar la página"
@@ -55,14 +63,9 @@ export const useBrands = () =>{
         brands,
         loading, 
         error,
-        createBrand,
+        addBrand,
         editBrand,
         removeBrand
     }
-
-
-
-
-
 
 }

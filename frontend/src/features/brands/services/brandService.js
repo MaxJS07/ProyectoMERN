@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:4000/api"
+const API_URL = "http://localhost:4000/api/brands"
 
 //SERVICIOS DE LA API
 export const getBrands = async () => {
@@ -34,5 +34,10 @@ export const deleteBrand = async (id) => {
         method: "DELETE"
     })
 
-    if(!res.ok) throw new Error("Error al eliminar la marca");
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Error eliminando la marca");
+    }
+
+    return true;
 }
