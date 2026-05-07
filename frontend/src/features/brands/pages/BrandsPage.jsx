@@ -5,7 +5,37 @@ import { useBrands } from "../hooks/useBrands.js";
 const BrandsPage = () => {
 
     //Traemos las cosas que nos proporciona el hook
-    const {brands, loading, error, addBrand, editBrand, removeBrand} = useBrands();
+    const { brands, loading, error, addBrand, editBrand, removeBrand } = useBrands();
+
+    function deleteBrand(brandId) {
+        Swal.fire({
+            title: "¿Esta seguro?",
+            text: "Esta acción no se puede revertir",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, eliminar"
+        }).then((result) => {
+
+            let deleted = removeBrand(brandId);
+
+            if (!deleted) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!"
+                });
+            }
+            else {
+                if (result.isConfirmed) Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
+    }
 
     return (
         <div>
@@ -15,7 +45,35 @@ const BrandsPage = () => {
                     <p>Gestione todas las marcas de los productos de la empresa.</p>
                 </div>
                 <div className="px-3">
-                    <button class="btn btn-primary">Agregar marca</button>
+                    <button className="btn btn-primary" onClick={() => document.getElementById('my_modal_1').showModal()}>Agregar marca</button>
+                    <dialog id="my_modal_1" className="modal">
+                        <div className="modal-box">
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Nombre de la marca:</legend>
+                                <input type="text" className="input" placeholder="Nombre" />
+                            </fieldset>
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Eslogan de la marca:</legend>
+                                <input type="text" className="input" placeholder="Eslogan" />
+                            </fieldset>
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Dirección:</legend>
+                                <input type="text" className="input" placeholder="Dirección" />
+                            </fieldset>
+                            <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+                                <label className="label">
+                                    <input type="checkbox" defaultChecked className="checkbox" />
+                                    Activo
+                                </label>
+                            </fieldset>
+                            <div className="modal-action">
+                                <form method="dialog">
+                                    {/* if there is a button in form, it will close the modal */}
+                                    <button className="btn">Close</button>
+                                </form>
+                            </div>
+                        </div>
+                    </dialog>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="table">
@@ -34,162 +92,40 @@ const BrandsPage = () => {
                             {brands.map((brand) => (
                                 <tr key={brand._id}>
                                     <td>
-                                        <div className="">
-
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle h-12 w-12">
+                                                    <img
+                                                        src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                                        alt="brand"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="font-bold">{brand.name}</div>
+                                                {/*<div className="text-sm opacity-50">United States</div>*/}
+                                            </div>
                                         </div>
                                     </td>
+                                    <td>
+                                        "{brand.slogan}"
+                                    </td>
+                                    <td>
+                                        {brand.address}
+                                    </td>
+                                    <th>
+                                        <input type="checkbox" className="checkbox" checked={brand.isActive} readOnly />
+                                    </th>
+                                    <th>
+                                        <button className="btn btn-ghost btn-xs">Actualizar</button>
+                                        <button
+                                            className="btn btn-ghost btn-xs"
+                                            onClick={() => deleteBrand(brand._id)}>
+                                            Eliminar
+                                        </button>
+                                    </th>
                                 </tr>
                             ))}
-
-                            {/* row 1 */}
-                            <tr>
-
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Hart Hagerty</div>
-                                            <div className="text-sm opacity-50">United States</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Zemlak, Daniel and Leannon
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">
-                                        Desktop Support Technician
-                                    </span>
-                                </td>
-                                <td>Purple</td>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Actualizar</button>
-                                    <button className="btn btn-ghost btn-xs">Eliminar</button>
-                                </th>
-
-                            </tr>
-                            {/* row 2 */}
-                            <tr>
-
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                                                    alt="Avatar Tailwind CSS Component"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Brice Swyre</div>
-                                            <div className="text-sm opacity-50">China</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Carroll Group
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">
-                                        Tax Accountant
-                                    </span>
-                                </td>
-                                <td>Red</td>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Actualizar</button>
-                                    <button className="btn btn-ghost btn-xs">Eliminar</button>
-                                </th>
-                            </tr>
-                            {/* row 3 */}
-                            <tr>
-
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/4@94.webp"
-                                                    alt="Avatar Tailwind CSS Component"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Marjy Ferencz</div>
-                                            <div className="text-sm opacity-50">Russia</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Rowe-Schoen
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">
-                                        Office Assistant I
-                                    </span>
-                                </td>
-                                <td>Crimson</td>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Actualizar</button>
-                                    <button className="btn btn-ghost btn-xs">Eliminar</button>
-                                </th>
-                            </tr>
-                            {/* row 4 */}
-                            <tr>
-
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/5@94.webp"
-                                                    alt="Avatar Tailwind CSS Component"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Yancy Tear</div>
-                                            <div className="text-sm opacity-50">Brazil</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Wyman-Ledner
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">
-                                        Community Outreach Specialist
-                                    </span>
-                                </td>
-                                <td>Indigo</td>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">Actualizar</button>
-                                    <button className="btn btn-ghost btn-xs">Eliminar</button>
-                                </th>
-                            </tr>
                         </tbody>
                         {/* foot */}
                         <tfoot>
