@@ -164,9 +164,9 @@ const BrandsPage = () => {
                                     <input 
                                      type="checkbox"  
                                      className="checkbox" 
-                                     value={formData.isActive}
+                                     checked={formData.isActive}
                                      onChange={(e) =>
-                                        setFormData({...formData, isActive: e.target.value})
+                                        setFormData({...formData, isActive: e.target.checked})
                                      }
                                     />
                                     Activo
@@ -208,7 +208,7 @@ const BrandsPage = () => {
                                             <div className="avatar">
                                                 <div className="mask mask-squircle h-12 w-12">
                                                     <img
-                                                        src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                                        src="https://images.ctfassets.net/1p6jth4lndy5/6vEmsLYHfPcdPkLJi9D7gI/68cae385e20969ac39734424919b6040/brand_awareness.jpeg?fm=webp&w=1200&h=630&fit=thumb"
                                                         alt="brand"
                                                     />
                                                 </div>

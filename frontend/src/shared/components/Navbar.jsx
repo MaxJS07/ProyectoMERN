@@ -15,6 +15,7 @@ export const Navbar = () => {
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/brands">Brands</Link></li>
+                        <li><Link to="/login/">Inicio sesión</Link></li>
                     </ul>
                 </div>
             </div>
