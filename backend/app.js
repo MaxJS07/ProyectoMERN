@@ -15,6 +15,7 @@ import recoveryPassword from "./src/routes/recoveryPassword.js"
 import providersRoute from "./src/routes/provider.js"
 import cartsRoute from "./src/routes/carts.js"
 import cors from "cors"
+import wompiRoute from "./src/routes/wompi.js"
 
 import cookieParser from "cookie-parser"
 
@@ -60,5 +61,7 @@ app.use("/api/recoveryPassword", recoveryPassword)
 app.use("/api/providers", providersRoute)
 
 app.use("/api/carts", cartsRoute)
+
+app.use("/api/wompi", wompiRoute)
 
 export default app;
