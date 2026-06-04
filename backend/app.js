@@ -16,6 +16,7 @@ import providersRoute from "./src/routes/provider.js"
 import cartsRoute from "./src/routes/carts.js"
 import cors from "cors"
 import wompiRoute from "./src/routes/wompi.js"
+import driversRoute from "./src/routes/deliveryDrivers.js"
 
 import cookieParser from "cookie-parser"
 
@@ -63,5 +64,7 @@ app.use("/api/providers", providersRoute)
 app.use("/api/carts", cartsRoute)
 
 app.use("/api/wompi", wompiRoute)
+
+app.use("/api/deliveryDriver", driversRoute)
 
 export default app;
