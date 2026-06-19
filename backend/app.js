@@ -1,4 +1,5 @@
 import express from "express"
+import { validateAuthCookie } from "./src/middlewares/authMiddleware.js"
 import productsRoute from "./src/routes/products.js"
 import branchesRoute from "./src/routes/branches.js"
 import employeesRoute from "./src/routes/employees.js"
@@ -61,10 +62,11 @@ app.use("/api/recoveryPassword", recoveryPassword)
 
 app.use("/api/providers", providersRoute)
 
-app.use("/api/carts", cartsRoute)
+app.use("/api/carts", validateAuthCookie(["admin", "customer"]), cartsRoute)
 
 app.use("/api/wompi", wompiRoute)
 
 app.use("/api/deliveryDriver", driversRoute)
+
 
 export default app;

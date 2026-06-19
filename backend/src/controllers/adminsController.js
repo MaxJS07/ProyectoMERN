@@ -1,6 +1,7 @@
 const adminController = {};
 
 import adminModel from "../models/admins.js"
+import bcrypt from "bcryptjs";
 
 //SELECT
 adminController.getAdmins = async (req, res) => {
@@ -15,7 +16,7 @@ adminController.getAdmins = async (req, res) => {
 //INSERTAR
 adminController.insertAdmin = async (req, res) => {
     try {
-        let {name, email, password, isVerified} = req.body
+        let {name, email, password, isVerified, loginAttempts, timeOut} = req.body
 
         name = name?.trim();
         email = email?.trim();
@@ -24,6 +25,8 @@ adminController.insertAdmin = async (req, res) => {
         if(!name || !email || !password || isVerified === null){
             return res.status(400).json({message: "All fields are required"})
         }
+
+        const passwordHash = await bcrypt.hash(password, 10)
 
         //Validacion de tamaño
         if(name.lenght < 3){
@@ -34,7 +37,7 @@ adminController.insertAdmin = async (req, res) => {
             return res.status(400).json({message: "The email is too short, it has to be at least 6 letters long"})
         }
 
-        const newAdmin = adminModel({name, email, password, isVerified})
+        const newAdmin = adminModel({name, email, password : passwordHash, isVerified, loginAttempts : loginAttempts || 0, timeOut: timeOut || null})
         await newAdmin.save();
 
         return res.status(201).json({status: "success", message: "The admin was created", data: newAdmin})
@@ -62,7 +65,7 @@ adminController.deleteAdmin = async (req, res) => {
 //UPDATE
 adminController.updateAdmin = async (req, res) => {
     try {
-        let {name, email, password, isVerified} = req.body
+        let {name, email, password, isVerified, loginAttempts, timeOut} = req.body
 
         name = name?.trim();
         email = email?.trim();
@@ -83,8 +86,10 @@ adminController.updateAdmin = async (req, res) => {
             {
                 name,
                 email,
-                password,
-                isVerified
+                password : passwordHash,
+                isVerified,
+                loginAttempts,
+                timeOut
             },
             {
                 new: true   
