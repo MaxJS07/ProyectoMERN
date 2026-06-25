@@ -18,6 +18,7 @@ import cartsRoute from "./src/routes/carts.js"
 import cors from "cors"
 import wompiRoute from "./src/routes/wompi.js"
 import driversRoute from "./src/routes/deliveryDrivers.js"
+import eventsRoute from "./src/routes/events.js"
 
 import cookieParser from "cookie-parser"
 
@@ -67,6 +68,7 @@ app.use("/api/carts", validateAuthCookie(["admin", "customer"]), cartsRoute)
 app.use("/api/wompi", wompiRoute)
 
 app.use("/api/deliveryDriver", driversRoute)
+app.use("/api/events", eventsRoute)
 
 
 export default app;
