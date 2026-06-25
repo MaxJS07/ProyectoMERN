@@ -1,39 +1,63 @@
 import React from "react";
 import { useState } from "react";
 import { useBrands } from "../hooks/useBrands.js";
+import { useForm } from "react-hook-form";
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button.jsx";
+import { toast } from "sonner"
+
 
 const BrandsPage = () => {
+
+    const {
+        register,
+        control,
+        watch,
+        getValues,
+        setValue,
+        reset,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            name: "",
+            slogan: "",
+            address: "",
+            isActive: false
+        }
+    })
+
 
     //Traemos las cosas que nos proporciona el hook
     const { brands, loading, error, addBrand, editBrand, removeBrand } = useBrands();
 
-    //Estado para el formulario del dialog
-    const [formData, setFormData] = useState({
-        name: "",
-        slogan: "",
-        address: "",
-        isActive: true
-    });
-
     //Estado para saber si estamos editando o creando
     const [editingBrand, setEditingBrand] = useState(null);
 
-    //Función para el evento submit del dialog
-    async function handleSubmit() {
+    async function onSubmit(data) {
+        console.log(watch())
         try {
-            
-            if(editingBrand){
+
+            if (editingBrand) {
                 //Si tiene algo esta variable, estamos actualizando
-                await editBrand(editingBrand._id, formData);
+                await editBrand(editingBrand._id, data);
 
                 Swal.fire({
                     icon: "success",
                     title: "Marca actualizada"
                 });
             }
-            else{
+            else {
                 //Si la variable no tiene nada, estamos creando
-                await addBrand(formData);
+                await addBrand(data);
                 Swal.fire({
                     icon: "success",
                     title: "Marca agregada"
@@ -41,12 +65,7 @@ const BrandsPage = () => {
             }
 
             //Después de la acción limpiamos el formulario
-            setFormData({
-                name: "",
-                slogan: "",
-                address: "",
-                isActive: true
-            })
+            reset();
 
             //Quitamos la brand que si se estaba editando
             setEditingBrand(null);
@@ -60,7 +79,17 @@ const BrandsPage = () => {
                 title: error.message
             });
         }
+
     }
+
+    const onError = (errors) => {
+        toast.error("Formulario incompleto.", {
+            description: Object.values(errors)[0]?.message,
+            position: "top-center",
+            descriptionClassName: "!text-black"
+        })
+    }
+
 
     function deleteBrand(brandId) {
         Swal.fire({
@@ -72,24 +101,24 @@ const BrandsPage = () => {
             cancelButtonColor: "#d33",
             confirmButtonText: "Si, eliminar"
         }).then((result) => {
-            if (result.isConfirmed){
+            if (result.isConfirmed) {
                 let deleted = removeBrand(brandId);
-                    if (!deleted) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Algo salió mal!"
-                        });
-                    }
-
+                if (!deleted) {
                     Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Algo salió mal!"
+                    });
+                }
+
+                Swal.fire({
                     title: "Eliminada!",
                     text: "Su marca ha sido eliminada",
                     icon: "success"
                 });
-            } 
+            }
 
-                    
+
         });
     }
 
@@ -101,20 +130,15 @@ const BrandsPage = () => {
                     <p>Gestione todas las marcas de los productos de la empresa.</p>
                 </div>
                 <div className="px-3">
-                    <button 
-                     className="btn btn-primary" 
-                     onClick={() =>{
-                        //Ponemos en blanco todo el formulario antes de crear
-                        setEditingBrand(null);
-                        setFormData({
-                            name: "",
-                            slogan:"",
-                            address:"",
-                            isActive: true
-                        })
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                            //Ponemos en blanco todo el formulario antes de crear
+                            setEditingBrand(null);
+                            reset();
 
-                        document.getElementById('my_modal_1').showModal()
-                     }}
+                            document.getElementById('my_modal_1').showModal()
+                        }}
                     >
                         Agregar marca
                     </button>
@@ -123,61 +147,60 @@ const BrandsPage = () => {
                             <h3 className="font-bold text-lg">
                                 {editingBrand ? "Actualizar marca" : "Agregar marca"}
                             </h3>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Nombre de la marca:</legend>
-                                <input
-                                 type="text" 
-                                 className="input" 
-                                 placeholder="Nombre"
-                                 value={formData.name}
-                                 onChange={(e) => 
-                                    setFormData({...formData, name: e.target.value})
-                                 } 
-                                />
-                            </fieldset>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Eslogan de la marca:</legend>
-                                <input 
-                                 type="text" 
-                                 className="input" 
-                                 placeholder="Eslogan"
-                                 value={formData.slogan}
-                                 onChange={(e) =>
-                                    setFormData({...formData, slogan: e.target.value})
-                                 } 
-                                />
-                            </fieldset>
-                            <fieldset className="fieldset">
-                                <legend className="fieldset-legend">Dirección:</legend>
-                                <input 
-                                 type="text" 
-                                 className="input" 
-                                 placeholder="Dirección"
-                                 value={formData.address}
-                                 onChange={(e) =>
-                                    setFormData({...formData, address: e.target.value})
-                                 } 
-                                 />
-                            </fieldset>
-                            <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
-                                <label className="label">
-                                    <input 
-                                     type="checkbox"  
-                                     className="checkbox" 
-                                     checked={formData.isActive}
-                                     onChange={(e) =>
-                                        setFormData({...formData, isActive: e.target.checked})
-                                     }
+                            <div className="flex flex-col gap-2">
+                                <fieldset className="fieldset">
+                                    <legend className="fieldset-legend">Nombre de la marca:</legend>
+                                    <input
+                                        type="text"
+                                        className="input border"
+                                        placeholder="Nombre"
+                                        {...register("name", {
+                                            required: "El nombre es obligatorio."
+                                        })}
                                     />
-                                    Activo
-                                </label>
-                            </fieldset>
+                                </fieldset>
+                                <fieldset className="fieldset">
+                                    <legend className="fieldset-legend">Eslogan de la marca:</legend>
+                                    <input
+                                        type="text"
+                                        className="input border"
+                                        placeholder="Eslogan"
+                                        {...register("slogan", {
+                                            required: "El slogan es obligatorio"
+                                        })}
+                                    />
+                                </fieldset>
+                                <fieldset className="fieldset">
+                                    <legend className="fieldset-legend">Dirección:</legend>
+                                    <input
+                                        type="text"
+                                        className="input border"
+                                        placeholder="Dirección"
+                                        {...register("address", {
+                                            required: "La dirección es obligatoria"
+                                        })}
+                                    />
+                                </fieldset>
+                                <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4 border-3">
+                                    <label className="label">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox border"
+                                            {...register("isActive")}
+                                        />
+                                        Activo
+                                    </label>
+                                </fieldset>
+                            </div>
+
                             <div className="modal-action">
-                                <button 
-                                 className="btn btn-primary"
-                                 onClick={handleSubmit}
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        handleSubmit(onSubmit, onError)();
+                                    }}
                                 >
-                                    {editingBrand ? "Actualizar": "Agregar"}
+                                    {editingBrand ? "Actualizar" : "Agregar"}
                                 </button>
                                 <form method="dialog">
                                     {/* if there is a button in form, it will close the modal */}
@@ -229,23 +252,21 @@ const BrandsPage = () => {
                                         <input type="checkbox" className="checkbox" checked={brand.isActive} readOnly />
                                     </th>
                                     <th>
-                                        <button 
-                                         className="btn btn-ghost btn-xs"
-                                         onClick={() => {
-                                            //Cuando se presione actualizar ponemos la brand en la variable editingBrand
-                                            setEditingBrand(brand)
+                                        <button
+                                            className="btn btn-ghost btn-xs"
+                                            onClick={() => {
+                                                //Cuando se presione actualizar ponemos la brand en la variable editingBrand
+                                                setEditingBrand(brand)
 
-                                            //Ahora llenamos el estado del formulario del modal.
-                                            setFormData({
-                                                name: brand.name,
-                                                slogan: brand.slogan,
-                                                address: brand.address,
-                                                isActive: brand.isActive
-                                            })
+                                                //Ahora llenamos el estado del formulario del modal.
+                                                setValue("name", brand.name)
+                                                setValue("slogan", brand.slogan)
+                                                setValue("address", brand.address)
+                                                setValue("isActive", brand.isActive)
 
-                                            //Mostramos el formulario
-                                            document.getElementById('my_modal_1').showModal();
-                                         }}
+                                                //Mostramos el formulario
+                                                document.getElementById('my_modal_1').showModal();
+                                            }}
                                         >
                                             Actualizar
                                         </button>
@@ -265,8 +286,7 @@ const BrandsPage = () => {
                     </table>
                 </div>
             </div>
-
-        </div>
+        </div >
     );
 };
 

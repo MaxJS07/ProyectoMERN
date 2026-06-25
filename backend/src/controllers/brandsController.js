@@ -49,6 +49,7 @@ brandsController.insertBrands = async (req, res) => {
         return res.status(201).json({status: "New brand created", data: newBrand})
 
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({status: "Internal Server Error", message: error})
     }
 
