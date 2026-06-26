@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:4000/api/brands"
+const API_URL = "https://proyectomern-q8fp.onrender.com/api/brands"
 
 //SERVICIOS DE LA API
 export const getBrands = async () => {
