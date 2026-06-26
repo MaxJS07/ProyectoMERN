@@ -25,7 +25,7 @@ import cookieParser from "cookie-parser"
 const app = express();
 
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://proyecto-mern-olive.vercel.app/", "https://proyecto-mern-hh5mecxf5-maxsteam25.vercel.app/"],
+    origin: ["http://localhost:5173", "http://localhost:5174", "https://proyecto-mern-hh5mecxf5-maxsteam25.vercel.app"],
     //Permitir el envío de cookies y credenciales
     credentials: true
 }))
